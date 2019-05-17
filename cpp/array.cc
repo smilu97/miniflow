@@ -5,10 +5,11 @@
 
 #include "array.h"
 #include <cstdlib>
+#include <cstring>
 using namespace std;
 using namespace miniflow;
 
-template <typename ItemType>
+template <class ItemType>
 Array<ItemType>::Array(vector<int> _shape) {
     shape = _shape;
     ndims = shape.size();
@@ -30,12 +31,12 @@ Array<ItemType>::Array(vector<int> _shape) {
     data = (char*) malloc(nbytes);
 }
 
-template <typename ItemType>
+template <class ItemType>
 Array<ItemType>::~Array() {
     free(data);
 }
 
-template <typename ItemType>
+template <class ItemType>
 int Array<ItemType>::GetOffset(vector<int> indices) {
     int offset = 0;
     for (int i = 0; i < ndims; i++) {
@@ -44,14 +45,37 @@ int Array<ItemType>::GetOffset(vector<int> indices) {
     return offset;
 }
 
-template <typename ItemType>
+template <class ItemType>
 ItemType Array<ItemType>::Get(vector<int> indices) {
     return *((ItemType*)(data + GetOffset(indices)));
 }
 
-template <typename ItemType>
+template <class ItemType>
 void Array<ItemType>::Set(vector<int> indices, ItemType item) {
     *((ItemType*)(data + GetOffset(indices))) = item;
+}
+
+template <class ItemType>
+Array<ItemType>* Array<ItemType>::empty(vector<int> shape) {
+    Array<ItemType> * res = new Array<ItemType>(shape);
+    return res;
+}
+
+template <class ItemType>
+Array<ItemType>* Array<ItemType>::zeros(vector<int> shape) {
+    Array<ItemType> * res = new Array<ItemType>(shape);
+    memset(res->data, 0, res->nbytes);
+    return res;
+}
+
+template <class ItemType>
+Array<ItemType>* Array<ItemType>::ones(vector<int> shape) {
+    Array<ItemType> * res = new Array<ItemType>(shape);
+    ItemType * it = (ItemType*) res->data;
+    for (int i = 0; i < res->size; i++) {
+        *it++ = 1;
+    }
+    return res;
 }
 
 namespace miniflow {
