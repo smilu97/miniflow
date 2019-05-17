@@ -24,6 +24,32 @@ Node* Node::GetArgument(int index) {
     return args_[index];
 }
 
+void Node::SetInt(int val) {
+    this->val_ = new int(val);
+}
+
+void Node::SetFloat(float val) {
+    this->val_ = new float(val);
+}
+
+template <class ItemType>
+void Node::SetArray(Array<ItemType> val) {
+    this->val_ = val.Copy();
+}
+
+int Node::GetInt() {
+    return *((int*) this->val_);
+}
+
+float Node::GetFloat() {
+    return *((float*) this->val_);
+}
+
+template <class ItemType>
+Array<ItemType> Node::GetArray() {
+    return (Array<ItemType>*) this->val_;
+}
+
 /*************************
  * class Operation
  */
@@ -41,8 +67,8 @@ Operation::~Operation() {
  */
 
 template <class ValueType>
-Variable<ValueType>::Variable(vector<int> shape) {
-    this->val_ = new Array<ValueType>(shape);
+Variable<ValueType>::Variable() {
+    this->val_ = new ValueType;
     this->type_ = NT_VAR;
 }
 
