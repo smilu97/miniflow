@@ -18,7 +18,7 @@ namespace miniflow {
         int nbytes;
     };
 
-    template <typename ItemType>
+    template <typename ItemType = float>
     class Array: public NDarray {
     public:
         Array();
