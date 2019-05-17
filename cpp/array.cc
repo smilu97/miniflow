@@ -47,6 +47,11 @@ int Array<ItemType>::GetOffset(vector<int> indices) {
 
 template <class ItemType>
 ItemType Array<ItemType>::Get(vector<int> indices) {
+    for (int i = 0; i < indices.size(); i++) {
+        if (indices[i] >= this->shape[i] && this->shape[i] == 1) {
+            indices[i] = 1;
+        }
+    }
     return *((ItemType*)(data + GetOffset(indices)));
 }
 
