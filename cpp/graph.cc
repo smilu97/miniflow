@@ -11,18 +11,11 @@ using namespace miniflow;
  * class Node
  */
 
-template <class ItemType>
-Node<ItemType>::Node() {
+Node::Node() {
     val_ = 0;
 }
 
-template <typename ItemType>
-Array<ItemType>& Node<ItemType>::GetValue() {
-    return *val_;
-}
-
-template <typename ItemType>
-Node<ItemType>* Node<ItemType>::GetArgument(int index) {
+Node* Node::GetArgument(int index) {
     if (index >= args_.size()) {
         // out bound
         printf("[Runtime Error]: Out of bound: GetArgument(%d)\n", index);
@@ -35,13 +28,11 @@ Node<ItemType>* Node<ItemType>::GetArgument(int index) {
  * class Operation
  */
 
-template <typename ItemType>
-Operation<ItemType>::Operation() {
+Operation::Operation() {
     this->type_ = NT_OP;
 }
 
-template <typename ItemType>
-Operation<ItemType>::~Operation() {
+Operation::~Operation() {
 
 }
 
@@ -49,42 +40,37 @@ Operation<ItemType>::~Operation() {
  * class Variable
  */
 
-template <typename ItemType>
-Variable<ItemType>::Variable(vector<int> shape) {
-    this->val_ = new Array<ItemType>(shape);
+template <class ValueType>
+Variable<ValueType>::Variable(vector<int> shape) {
+    this->val_ = new Array<ValueType>(shape);
     this->type_ = NT_VAR;
 }
 
-template <typename ItemType>
-Variable<ItemType>::~Variable() {
+template <class ValueType>
+Variable<ValueType>::~Variable() {
 
 }
 
-template <typename ItemType>
-void Variable<ItemType>::SetValue(Array<ItemType> * val) {
-    this->val_ = val;
+template <class ValueType>
+void Variable<ValueType>::SetValue(ValueType val) {
+    this->val_ = new ValueType(val);
 }
 
 /*************************
  * class Placeholder
  */
 
-template <typename ItemType>
-Placeholder<ItemType>::Placeholder() {
+template <class ValueType>
+Placeholder<ValueType>::Placeholder() {
     this->type_ = NT_PH;
 }
 
-template <typename ItemType>
-Placeholder<ItemType>::~Placeholder() {
+template <class ValueType>
+Placeholder<ValueType>::~Placeholder() {
     
 }
 
 namespace miniflow {
-    template class Node<int>;
-    template class Node<float>;
-    template class Placeholder<int>;
-    template class Placeholder<float>;
-    template class Variable<int>;
-    template class Variable<float>;
+    
 }
 
