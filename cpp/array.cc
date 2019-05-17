@@ -56,6 +56,13 @@ void Array<ItemType>::Set(vector<int> indices, ItemType item) {
 }
 
 template <class ItemType>
+Array<ItemType>* Array<ItemType>::Copy() {
+    Array<ItemType> * res = Array<ItemType>.empty(this->shape);
+    memcpy(res->data, this->data, this->nbytes);
+    return res;
+}
+
+template <class ItemType>
 Array<ItemType>* Array<ItemType>::empty(vector<int> shape) {
     Array<ItemType> * res = new Array<ItemType>(shape);
     return res;

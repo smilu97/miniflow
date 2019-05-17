@@ -27,7 +27,8 @@ namespace miniflow {
         int GetOffset(vector<int> indices);
         ItemType Get(vector<int> indices);
         void Set(vector<int> indices, ItemType item);
-        
+        Array<ItemType>* Copy();
+
         static Array<ItemType>* empty(vector<int> shape);
         static Array<ItemType>* zeros(vector<int> shape);
         static Array<ItemType>* ones(vector<int> shape);
