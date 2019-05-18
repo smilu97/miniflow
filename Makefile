@@ -1,6 +1,6 @@
 CC := g++
 CFLAGS := -I headers --std=c++14
-MODS := graph array
+MODS := graph array util
 TESTS := graph
 SRCS := $(foreach mod, $(MODS), cpp/$(mod).cc)
 OBJS := $(foreach mod, $(MODS), cpp/$(mod).o)
