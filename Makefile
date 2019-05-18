@@ -11,7 +11,7 @@ TEST_OBJS := $(foreach test, $(TESTS), cpp/test_$(test).o)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 test: $(OBJS) $(TEST_OBJS)
-	$(CC) $(CFLAGS) $(SRCS) cpp/test_graph.cc -o test/test_graph
+	$(CC) $(CFLAGS) $(OBJS) cpp/test_graph.o -o test/test_graph
 	test/test_graph
 
 clean:
