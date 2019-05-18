@@ -4,13 +4,14 @@
  */
 
 #include "array.h"
+#include "util.h"
 #include <cstdlib>
 #include <cstring>
 using namespace std;
 using namespace miniflow;
 
 template <class ItemType>
-Array<ItemType>::Array(vector<int> _shape) {
+Array<ItemType>::Array(vector<int> _shape, bool alloc) {
     shape = _shape;
     ndims = shape.size();
     itemsize = sizeof(ItemType);
@@ -28,12 +29,13 @@ Array<ItemType>::Array(vector<int> _shape) {
         strides.push_back(stride);
     }
 
-    data = (char*) malloc(nbytes);
+    if (alloc) data = (char*) malloc(nbytes);
+    this->alloc = alloc;
 }
 
 template <class ItemType>
 Array<ItemType>::~Array() {
-    free(data);
+    if (alloc) free(data);
 }
 
 template <class ItemType>
@@ -47,11 +49,6 @@ int Array<ItemType>::GetOffset(vector<int> indices) {
 
 template <class ItemType>
 ItemType Array<ItemType>::Get(vector<int> indices) {
-    for (int i = 0; i < indices.size(); i++) {
-        if (indices[i] >= this->shape[i] && this->shape[i] == 1) {
-            indices[i] = 1;
-        }
-    }
     return *((ItemType*)(data + GetOffset(indices)));
 }
 
@@ -61,9 +58,53 @@ void Array<ItemType>::Set(vector<int> indices, ItemType item) {
 }
 
 template <class ItemType>
-Array<ItemType>* Array<ItemType>::Copy() {
-    Array<ItemType> * res = Array<ItemType>.empty(this->shape);
+Array<ItemType>* Array<ItemType>::Clone() {
+    Array<ItemType> * res = Array<ItemType>::empty(this->shape);
     memcpy(res->data, this->data, this->nbytes);
+    return res;
+}
+
+template <class ItemType>
+Array<ItemType> Array<ItemType>::BroadcastTo(vector<int> shape) {
+    vector<int> strides(shape.size());
+    int diff_sz = shape.size() - this->shape.size();
+    for (int i = 0; i < diff_sz; i++) {
+        strides[i] = 0;
+    }
+    for (int i = diff_sz, j = 0; i < shape.size(); i++, j++) {
+        if (this->shape[j] != shape[i]) {
+            if (this->shape[j] == 1) {
+                strides[i] = 0;
+            } else {
+                puts("BroadcastTo Error");
+            }
+        } else {
+            strides[i] = this->strides[j];
+        }
+    }
+    Array<ItemType> res(shape, false);
+    res.strides = strides;
+    return res;
+}
+
+template <class ItemType>
+vector<int> Array<ItemType>::CombineShape(vector<int> shape_a, vector<int> shape_b) {
+    if (shape_a.size() > shape_b.size()) swap(shape_a, shape_b);
+    vector<int> res(shape_b.size());
+    int diff_sz = shape_b.size() - shape_a.size();
+    for (int i = 0; i < diff_sz; i++) {
+        res[i] = shape_b[i];
+    }
+    for (int i = 0, j = diff_sz; j < shape_b.size(); i++, j++) {
+        int sa = shape_a[i];
+        int sb = shape_b[j];
+        if (sa != sb) {
+            if (sa != 1 && sb != 1) {
+                puts("CombineShape Error");
+            }
+        }
+        res[j] = max2(sa, sb);
+    }
     return res;
 }
 
@@ -89,6 +130,19 @@ Array<ItemType>* Array<ItemType>::ones(vector<int> shape) {
     }
     return res;
 }
+
+// TODO:
+//     void MultiplyTo(Array<ItemType>& b, Array<ItemType>& dest);
+//     void MultiplyTo(float b, Array<ItemType>& dest);
+//     void MultiplyTo(int b, Array<ItemType>& dest);
+
+//     void AddTo(Array<ItemType>& b, Array<ItemType>& dest);
+//     void AddTo(float b, Array<ItemType>& dest);
+//     void AddTo(int b, Array<ItemType>& dest);
+
+//     void DivideTo(Array<ItemType>& b, Array<ItemType>& dest);
+//     void DivideTo(float b, Array<ItemType>& dest);
+//     void DivideTo(int b, Array<ItemType>& dest);
 
 namespace miniflow {
     template class Array<int>;
