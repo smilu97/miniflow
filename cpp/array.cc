@@ -131,18 +131,54 @@ Array<ItemType>* Array<ItemType>::ones(vector<int> shape) {
     return res;
 }
 
+template <class ItemType>
+void Array<ItemType>::MultiplyTo(Array<ItemType>& b, Array<ItemType>& dest) {
+    if (this->shape != b.shape) {
+        puts("MultiplyTo(Array): shape (a, b) dismatching error");
+    }
+    if (this->shape != dest.shape) {
+        puts("MultiplyTo(Array): shape (a, dest) dismatching error");
+    }
+    ItemType * arr_a = (ItemType*) this->data;
+    ItemType * arr_b = (ItemType*) b.data;
+    ItemType * arr_d = (ItemType*) dest.data;
+    for (int i = 0; i < this->size; i++) {
+        arr_d[i] = arr_a[i] * arr_b[i];
+    }
+}
+
+template <class ItemType>
+void Array<ItemType>::MultiplyTo(float b, Array<ItemType>& dest) {
+    if (this->shape != dest.shape) {
+        puts("MultiplyTo(float): shape (a, dest) dismatching error");
+    }
+    ItemType * arr_a = (ItemType*) this->data;
+    ItemType * arr_d = (ItemType*) dest.data;
+    for (int i = 0; i < this->size; i++) {
+        arr_d[i] = arr_a[i] * b;
+    }
+}
+
+template <class ItemType>
+void Array<ItemType>::MultiplyTo(int b, Array<ItemType>& dest) {
+    if (this->shape != dest.shape) {
+        puts("MultiplyTo(int): shape (a, dest) dismatching error");
+    }
+    ItemType * arr_a = (ItemType*) this->data;
+    ItemType * arr_d = (ItemType*) dest.data;
+    for (int i = 0; i < this->size; i++) {
+        arr_d[i] = arr_a[i] * b;
+    }
+}
+
 // TODO:
-//     void MultiplyTo(Array<ItemType>& b, Array<ItemType>& dest);
-//     void MultiplyTo(float b, Array<ItemType>& dest);
-//     void MultiplyTo(int b, Array<ItemType>& dest);
+//     void Array<ItemType>::AddTo(Array<ItemType>& b, Array<ItemType>& dest);
+//     void Array<ItemType>::AddTo(float b, Array<ItemType>& dest);
+//     void Array<ItemType>::AddTo(int b, Array<ItemType>& dest);
 
-//     void AddTo(Array<ItemType>& b, Array<ItemType>& dest);
-//     void AddTo(float b, Array<ItemType>& dest);
-//     void AddTo(int b, Array<ItemType>& dest);
-
-//     void DivideTo(Array<ItemType>& b, Array<ItemType>& dest);
-//     void DivideTo(float b, Array<ItemType>& dest);
-//     void DivideTo(int b, Array<ItemType>& dest);
+//     void Array<ItemType>::DivideTo(Array<ItemType>& b, Array<ItemType>& dest);
+//     void Array<ItemType>::DivideTo(float b, Array<ItemType>& dest);
+//     void Array<ItemType>::DivideTo(int b, Array<ItemType>& dest);
 
 namespace miniflow {
     template class Array<int>;

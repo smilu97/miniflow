@@ -8,6 +8,6 @@ using namespace miniflow;
 
 int main(int argc, char** argv)
 {
-    Node<int> node;
+    Node node;
     puts("Test Graph");
 }
