@@ -1,11 +1,13 @@
 /*
  * Utility functions
  */
+#pragma once
 
 #include "array.h"
 #include <iostream>
 #include <vector>
 using namespace std;
+using namespace miniflow;
 
 template <class T>
 T max2(T a, T b);

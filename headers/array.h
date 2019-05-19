@@ -2,6 +2,7 @@
  * array.h
  * author: smilu97
  */
+#pragma once
 
 #include <vector>
 #include <tuple>

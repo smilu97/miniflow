@@ -2,6 +2,7 @@
  * Graph.h
  * author: smilu97
  */
+#pragma once
 
 #include "array.h"
 #include <vector>
