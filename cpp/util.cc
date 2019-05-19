@@ -51,4 +51,4 @@ void matrix_mul(Array<T> & a, Array<T> & b, Array<T> & d) {
 }
 
 template void matrix_mul(Array<int> & a, Array<int> & b, Array<int> & d);
-template void matrix_mul(Array<float> & a, Array<float> & b, Array<float> & d)
+template void matrix_mul(Array<float> & a, Array<float> & b, Array<float> & d);
