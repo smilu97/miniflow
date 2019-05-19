@@ -141,18 +141,18 @@ Array<ItemType>* Array<ItemType>::ones(const vector<int> & _shape) {
 
 template <class I, typename F>
 void calc_recursive(
-    int level,
     const Array<I> & a,
     const Array<I> & b,
     Array<I> * d,
-    F op
+    F op,
+    int level = -1
 ) {
     static char *ap, *bp, *dp;
     if (level == -1) {
         ap = a.data;
         bp = b.data;
         dp = d->data;
-        calc_recursive(0, a, b, d, op);
+        calc_recursive(a, b, d, op, 0);
         return;
     }
     if (level == a.shape.size()) {
@@ -160,7 +160,7 @@ void calc_recursive(
         return;
     }
     for (int i = 0; i < a.shape[level]; i++) {
-        calc_recursive(level + 1, a, b, d, op);
+        calc_recursive(a, b, d, op, level + 1);
         ap += a.strides[level];
         bp += b.strides[level];
         dp += d->strides[level];
@@ -181,7 +181,7 @@ void Array<ItemType>::MultiplyTo(
     if (this->shape != dest->shape) {
         puts("MultiplyTo(Array): shape (a, dest) dismatching error");
     }
-    calc_recursive(-1, *this, b, dest, [](ItemType a, ItemType b) {
+    calc_recursive(*this, b, dest, [](ItemType a, ItemType b) {
         return a * b;
     });
 }
@@ -221,7 +221,7 @@ void Array<ItemType>::AddTo(
     if (this->shape != dest->shape) {
         puts("AddTo(Array): shape (a, dest) dismatching error");
     }
-    calc_recursive(-1, *this, b, dest, [](ItemType a, ItemType b) {
+    calc_recursive(*this, b, dest, [](ItemType a, ItemType b) {
         return a + b;
     });
 }
@@ -261,7 +261,7 @@ void Array<ItemType>::DivideTo(
     if (this->shape != dest->shape) {
         puts("DivideTo(Array): shape (a, dest) dismatching error");
     }
-    calc_recursive(-1, *this, b, dest, [](ItemType a, ItemType b) {
+    calc_recursive(*this, b, dest, [](ItemType a, ItemType b) {
         return a / b;
     });
 }
