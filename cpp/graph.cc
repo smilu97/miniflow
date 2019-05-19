@@ -15,7 +15,7 @@ Node::Node() {
     val_ = 0;
 }
 
-Node* Node::GetArgument(int index) {
+Node* Node::GetArgument(int index) const {
     if (index >= args_.size()) {
         // out bound
         printf("[Runtime Error]: Out of bound: GetArgument(%d)\n", index);
@@ -33,20 +33,20 @@ void Node::SetFloat(float val) {
 }
 
 template <class ItemType>
-void Node::SetArray(Array<ItemType> val) {
+void Node::SetArray(const Array<ItemType> val) {
     this->val_ = val.Copy();
 }
 
-int Node::GetInt() {
+int Node::GetInt() const {
     return *((int*) this->val_);
 }
 
-float Node::GetFloat() {
+float Node::GetFloat() const {
     return *((float*) this->val_);
 }
 
 template <class ItemType>
-Array<ItemType> Node::GetArray() {
+Array<ItemType> Node::GetArray() const {
     return (Array<ItemType>*) this->val_;
 }
 
@@ -78,7 +78,7 @@ Variable<ValueType>::~Variable() {
 }
 
 template <class ValueType>
-void Variable<ValueType>::SetValue(ValueType val) {
+void Variable<ValueType>::SetValue(const ValueType val) {
     this->val_ = new ValueType(val);
 }
 

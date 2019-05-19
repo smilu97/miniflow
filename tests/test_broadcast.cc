@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     // printf("A: %p\n", A.data);
     // printf("B: %p\n", B.data);
 
-    A.MultiplyTo(B, C);
+    A.MultiplyTo(B, &C);
 
     // puts("C:"); print_2d_array(C);
 

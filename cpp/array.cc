@@ -11,7 +11,7 @@ using namespace std;
 using namespace miniflow;
 
 template <class ItemType>
-Array<ItemType>::Array(vector<int> _shape, bool alloc) {
+Array<ItemType>::Array(const vector<int> _shape, bool alloc) {
     shape = _shape;
     ndims = shape.size();
     itemsize = sizeof(ItemType);
@@ -39,7 +39,7 @@ Array<ItemType>::~Array() {
 }
 
 template <class ItemType>
-int Array<ItemType>::GetOffset(vector<int> indices) {
+int Array<ItemType>::GetOffset(const vector<int> indices) const {
     int offset = 0;
     for (int i = 0; i < ndims; i++) {
         offset += strides[i] * indices[i];
@@ -48,24 +48,24 @@ int Array<ItemType>::GetOffset(vector<int> indices) {
 }
 
 template <class ItemType>
-ItemType Array<ItemType>::Get(vector<int> indices) {
+ItemType Array<ItemType>::Get(const vector<int> indices) const {
     return *((ItemType*)(data + GetOffset(indices)));
 }
 
 template <class ItemType>
-void Array<ItemType>::Set(vector<int> indices, ItemType item) {
+void Array<ItemType>::Set(const vector<int> indices, const ItemType item) {
     *((ItemType*)(data + GetOffset(indices))) = item;
 }
 
 template <class ItemType>
-Array<ItemType>* Array<ItemType>::Clone() {
+Array<ItemType>* Array<ItemType>::Clone() const {
     Array<ItemType> * res = Array<ItemType>::empty(this->shape);
     memcpy(res->data, this->data, this->nbytes);
     return res;
 }
 
 template <class ItemType>
-Array<ItemType> Array<ItemType>::BroadcastTo(vector<int> _shape) {
+Array<ItemType> Array<ItemType>::BroadcastTo(const vector<int> _shape) const {
     vector<int> strides(_shape.size());
     int diff_sz = _shape.size() - this->shape.size();
     for (int i = 0; i < diff_sz; i++) {
@@ -91,8 +91,10 @@ Array<ItemType> Array<ItemType>::BroadcastTo(vector<int> _shape) {
 }
 
 template <class ItemType>
-vector<int> Array<ItemType>::CombineShape(vector<int> shape_a, vector<int> shape_b) {
-    if (shape_a.size() > shape_b.size()) swap(shape_a, shape_b);
+vector<int> Array<ItemType>::CombineShape(const vector<int> shape_a, const vector<int> shape_b) {
+    if (shape_a.size() > shape_b.size()) {
+        return Array<ItemType>::CombineShape(shape_b, shape_a);
+    }
     vector<int> res(shape_b.size());
     int diff_sz = shape_b.size() - shape_a.size();
     for (int i = 0; i < diff_sz; i++) {
@@ -112,20 +114,20 @@ vector<int> Array<ItemType>::CombineShape(vector<int> shape_a, vector<int> shape
 }
 
 template <class ItemType>
-Array<ItemType>* Array<ItemType>::empty(vector<int> shape) {
+Array<ItemType>* Array<ItemType>::empty(const vector<int> shape) {
     Array<ItemType> * res = new Array<ItemType>(shape);
     return res;
 }
 
 template <class ItemType>
-Array<ItemType>* Array<ItemType>::zeros(vector<int> shape) {
+Array<ItemType>* Array<ItemType>::zeros(const vector<int> shape) {
     Array<ItemType> * res = new Array<ItemType>(shape);
     memset(res->data, 0, res->nbytes);
     return res;
 }
 
 template <class ItemType>
-Array<ItemType>* Array<ItemType>::ones(vector<int> shape) {
+Array<ItemType>* Array<ItemType>::ones(const vector<int> shape) {
     Array<ItemType> * res = new Array<ItemType>(shape);
     ItemType * it = (ItemType*) res->data;
     for (int i = 0; i < res->size; i++) {
@@ -135,12 +137,12 @@ Array<ItemType>* Array<ItemType>::ones(vector<int> shape) {
 }
 
 template <class I, typename F>
-void calc_recursive(int level, Array<I>& a, Array<I>& b, Array<I>& d, F op) {
+void calc_recursive(int level, const Array<I>& a, const Array<I>& b, Array<I> * d, F op) {
     static char *ap, *bp, *dp;
     if (level == -1) {
         ap = a.data;
         bp = b.data;
-        dp = d.data;
+        dp = d->data;
         calc_recursive(0, a, b, d, op);
         return;
     }
@@ -152,19 +154,19 @@ void calc_recursive(int level, Array<I>& a, Array<I>& b, Array<I>& d, F op) {
         calc_recursive(level + 1, a, b, d, op);
         ap += a.strides[level];
         bp += b.strides[level];
-        dp += d.strides[level];
+        dp += d->strides[level];
     }
     ap -= a.strides[level] * a.shape[level];
     bp -= b.strides[level] * a.shape[level];
-    dp -= d.strides[level] * a.shape[level];
+    dp -= d->strides[level] * a.shape[level];
 }
 
 template <class ItemType>
-void Array<ItemType>::MultiplyTo(Array<ItemType>& b, Array<ItemType>& dest) {
+void Array<ItemType>::MultiplyTo(const Array<ItemType> & b, Array<ItemType> * dest) const {
     if (this->shape != b.shape) {
         puts("MultiplyTo(Array): shape (a, b) dismatching error");
     }
-    if (this->shape != dest.shape) {
+    if (this->shape != dest->shape) {
         puts("MultiplyTo(Array): shape (a, dest) dismatching error");
     }
     calc_recursive(-1, *this, b, dest, [](ItemType a, ItemType b) {
@@ -173,35 +175,35 @@ void Array<ItemType>::MultiplyTo(Array<ItemType>& b, Array<ItemType>& dest) {
 }
 
 template <class ItemType>
-void Array<ItemType>::MultiplyTo(float b, Array<ItemType>& dest) {
-    if (this->shape != dest.shape) {
+void Array<ItemType>::MultiplyTo(float b, Array<ItemType> * dest) const {
+    if (this->shape != dest->shape) {
         puts("MultiplyTo(float): shape (a, dest) dismatching error");
     }
     ItemType * arr_a = (ItemType*) this->data;
-    ItemType * arr_d = (ItemType*) dest.data;
+    ItemType * arr_d = (ItemType*) dest->data;
     for (int i = 0; i < this->size; i++) {
         arr_d[i] = arr_a[i] * b;
     }
 }
 
 template <class ItemType>
-void Array<ItemType>::MultiplyTo(int b, Array<ItemType>& dest) {
-    if (this->shape != dest.shape) {
+void Array<ItemType>::MultiplyTo(int b, Array<ItemType> * dest) const {
+    if (this->shape != dest->shape) {
         puts("MultiplyTo(int): shape (a, dest) dismatching error");
     }
     ItemType * arr_a = (ItemType*) this->data;
-    ItemType * arr_d = (ItemType*) dest.data;
+    ItemType * arr_d = (ItemType*) dest->data;
     for (int i = 0; i < this->size; i++) {
         arr_d[i] = arr_a[i] * b;
     }
 }
 
 template <class ItemType>
-void Array<ItemType>::AddTo(Array<ItemType>& b, Array<ItemType>& dest) {
+void Array<ItemType>::AddTo(const Array<ItemType>& b, Array<ItemType> * dest) const {
     if (this->shape != b.shape) {
         puts("AddTo(Array): shape (a, b) dismatching error");
     }
-    if (this->shape != dest.shape) {
+    if (this->shape != dest->shape) {
         puts("AddTo(Array): shape (a, dest) dismatching error");
     }
     calc_recursive(-1, *this, b, dest, [](ItemType a, ItemType b) {
@@ -210,35 +212,35 @@ void Array<ItemType>::AddTo(Array<ItemType>& b, Array<ItemType>& dest) {
 }
 
 template <class ItemType>
-void Array<ItemType>::AddTo(float b, Array<ItemType>& dest) {
-    if (this->shape != dest.shape) {
+void Array<ItemType>::AddTo(float b, Array<ItemType> * dest) const {
+    if (this->shape != dest->shape) {
         puts("AddTo(float): shape (a, dest) dismatching error");
     }
     ItemType * arr_a = (ItemType*) this->data;
-    ItemType * arr_d = (ItemType*) dest.data;
+    ItemType * arr_d = (ItemType*) dest->data;
     for (int i = 0; i < this->size; i++) {
         arr_d[i] = arr_a[i] + b;
     }
 }
 
 template <class ItemType>
-void Array<ItemType>::AddTo(int b, Array<ItemType>& dest) {
-    if (this->shape != dest.shape) {
+void Array<ItemType>::AddTo(int b, Array<ItemType> * dest) const {
+    if (this->shape != dest->shape) {
         puts("AddTo(int): shape (a, dest) dismatching error");
     }
     ItemType * arr_a = (ItemType*) this->data;
-    ItemType * arr_d = (ItemType*) dest.data;
+    ItemType * arr_d = (ItemType*) dest->data;
     for (int i = 0; i < this->size; i++) {
         arr_d[i] = arr_a[i] + b;
     }
 }
 
 template <class ItemType>
-void Array<ItemType>::DivideTo(Array<ItemType>& b, Array<ItemType>& dest) {
+void Array<ItemType>::DivideTo(const Array<ItemType>& b, Array<ItemType> * dest) const {
     if (this->shape != b.shape) {
         puts("DivideTo(Array): shape (a, b) dismatching error");
     }
-    if (this->shape != dest.shape) {
+    if (this->shape != dest->shape) {
         puts("DivideTo(Array): shape (a, dest) dismatching error");
     }
     calc_recursive(-1, *this, b, dest, [](ItemType a, ItemType b) {
@@ -247,24 +249,24 @@ void Array<ItemType>::DivideTo(Array<ItemType>& b, Array<ItemType>& dest) {
 }
 
 template <class ItemType>
-void Array<ItemType>::DivideTo(float b, Array<ItemType>& dest) {
-    if (this->shape != dest.shape) {
+void Array<ItemType>::DivideTo(float b, Array<ItemType> * dest) const {
+    if (this->shape != dest->shape) {
         puts("DivideTo(float): shape (a, dest) dismatching error");
     }
     ItemType * arr_a = (ItemType*) this->data;
-    ItemType * arr_d = (ItemType*) dest.data;
+    ItemType * arr_d = (ItemType*) dest->data;
     for (int i = 0; i < this->size; i++) {
         arr_d[i] = arr_a[i] / b;
     }
 }
 
 template <class ItemType>
-void Array<ItemType>::DivideTo(int b, Array<ItemType>& dest) {
-    if (this->shape != dest.shape) {
+void Array<ItemType>::DivideTo(int b, Array<ItemType> * dest) const {
+    if (this->shape != dest->shape) {
         puts("DivideTo(int): shape (a, dest) dismatching error");
     }
     ItemType * arr_a = (ItemType*) this->data;
-    ItemType * arr_d = (ItemType*) dest.data;
+    ItemType * arr_d = (ItemType*) dest->data;
     for (int i = 0; i < this->size; i++) {
         arr_d[i] = arr_a[i] / b;
     }

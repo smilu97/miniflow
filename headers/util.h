@@ -19,4 +19,4 @@ template <class T>
 void print_vector(vector<T> vec);
 
 template <class T>
-void matrix_mul(Array<T> & a, Array<T> & b, Array<T> & d);
+void matrix_mul(const Array<T> & a, const Array<T> & b, Array<T> * d);

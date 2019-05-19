@@ -43,7 +43,7 @@ int main(int argc, char** argv)
         }
     }
 
-    a.MultiplyTo(b, c);
+    a.MultiplyTo(b, &c);
 
     bool error = false;
     for (int i = 0; i < 3; i++) {

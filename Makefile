@@ -7,6 +7,8 @@ OBJS := $(foreach mod, $(MODS), cpp/$(mod).o)
 TEST_SRCS := $(foreach test, $(TESTS), tests/test_$(test).cc)
 TEST_OBJS := $(foreach test, $(TESTS), tests/test_$(test).o)
 
+all: test
+
 .cc.o:
 	$(CC) $(CFLAGS) -c -o $@ $<
 

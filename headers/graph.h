@@ -23,17 +23,17 @@ namespace miniflow {
 		void * val_;
 	public:
 		Node();
-		Node* GetArgument(int index);
+		Node* GetArgument(int index) const;
 
 		void SetInt(int val);
 		void SetFloat(float val);
 		template <class ItemType>
-		void SetArray(Array<ItemType> val);
+		void SetArray(const Array<ItemType> val);
 		
-		int GetInt();
-		float GetFloat();
+		int GetInt() const;
+		float GetFloat() const;
 		template <class ItemType>
-		Array<ItemType> GetArray();
+		Array<ItemType> GetArray() const;
 	};
 
 	class Operation: public Node {
@@ -48,7 +48,7 @@ namespace miniflow {
 	public:
 		Variable();
 		~Variable();
-		void SetValue(ValueType val);
+		void SetValue(const ValueType val);
 	};
 
 	template <class ValueType>
