@@ -1,4 +1,4 @@
 .vscode/
 testroom/
 *.o
-test/
+test

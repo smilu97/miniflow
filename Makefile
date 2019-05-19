@@ -4,16 +4,16 @@ MODS := graph array util
 TESTS := graph op
 SRCS := $(foreach mod, $(MODS), cpp/$(mod).cc)
 OBJS := $(foreach mod, $(MODS), cpp/$(mod).o)
-TEST_SRCS := $(foreach test, $(TESTS), cpp/test_$(test).cc)
-TEST_OBJS := $(foreach test, $(TESTS), cpp/test_$(test).o)
+TEST_SRCS := $(foreach test, $(TESTS), tests/test_$(test).cc)
+TEST_OBJS := $(foreach test, $(TESTS), tests/test_$(test).o)
 
 .cc.o:
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 test: $(OBJS) $(TEST_OBJS)
 	for testo in $(TEST_OBJS) ; do \
-		$(CC) $(CFLAGS) $(OBJS) $$testo -o test/test ; \
-		test/test ; \
+		$(CC) $(CFLAGS) $(OBJS) $$testo -o test ; \
+		./test ; \
 	done
 
 clean:
