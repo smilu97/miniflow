@@ -251,6 +251,46 @@ void Array<ItemType>::AddTo(int b, Array<ItemType> * dest) const {
 }
 
 template <class ItemType>
+void Array<ItemType>::SubTo(
+    const Array<ItemType> & b,
+    Array<ItemType> * dest
+) const {
+    if (this->shape != b.shape) {
+        puts("SubTo(Array): shape (a, b) dismatching error");
+    }
+    if (this->shape != dest->shape) {
+        puts("SubTo(Array): shape (a, dest) dismatching error");
+    }
+    calc_recursive(*this, b, dest, [](ItemType a, ItemType b) {
+        return a - b;
+    });
+}
+
+template <class ItemType>
+void Array<ItemType>::SubTo(float b, Array<ItemType> * dest) const {
+    if (this->shape != dest->shape) {
+        puts("SubTo(float): shape (a, dest) dismatching error");
+    }
+    ItemType * arr_a = (ItemType*) this->data;
+    ItemType * arr_d = (ItemType*) dest->data;
+    for (int i = 0; i < this->size; i++) {
+        arr_d[i] = arr_a[i] - b;
+    }
+}
+
+template <class ItemType>
+void Array<ItemType>::SubTo(int b, Array<ItemType> * dest) const {
+    if (this->shape != dest->shape) {
+        puts("SubTo(int): shape (a, dest) dismatching error");
+    }
+    ItemType * arr_a = (ItemType*) this->data;
+    ItemType * arr_d = (ItemType*) dest->data;
+    for (int i = 0; i < this->size; i++) {
+        arr_d[i] = arr_a[i] - b;
+    }
+}
+
+template <class ItemType>
 void Array<ItemType>::DivideTo(
     const Array<ItemType> & b,
     Array<ItemType> * dest

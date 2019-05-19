@@ -129,6 +129,10 @@ public:
     void AddTo(float b, Array<ItemType> * dest) const;
     void AddTo(int b, Array<ItemType> * dest) const;
 
+    void SubTo(const Array<ItemType> & b, Array<ItemType> * dest) const;
+    void SubTo(float b, Array<ItemType> * dest) const;
+    void SubTo(int b, Array<ItemType> * dest) const;
+
     void DivideTo(const Array<ItemType> & b, Array<ItemType> * dest) const;
     void DivideTo(float b, Array<ItemType> * dest) const;
     void DivideTo(int b, Array<ItemType> * dest) const;
