@@ -16,6 +16,11 @@ class AddOp: public Operator {
 };
 
 template <class ItemType>
+class AddOp<Array<ItemType>>: public Operator {
+    void Update();
+};
+
+template <class ItemType>
 class SubOp: public Operator {
     void Update();
 };

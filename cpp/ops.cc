@@ -8,55 +8,37 @@ using namespace std;
 using namespace miniflow;
 
 template <>
-void AddOp<int>::Update() {
-    int a = this->GetArgument(0)->GetInt();
-    int b = this->GetArgument(1)->GetInt();
-    this->SetInt(a + b);
-}
+void AddOp<Array<float>>::Update() {
+    Array<float> * a = this->GetArgument(0)->GetArray<float>();
+    Array<float> * b = this->GetArgument(1)->GetArray<float>();
+    Array<float> * d = this->GetArray<float>();
 
-template <>
-void AddOp<float>::Update() {
-    float a = this->GetArgument(0)->GetFloat();
-    float b = this->GetArgument(1)->GetFloat();
-    this->SetFloat(a + b);
-}
-
-template<>
-void AddOp<Array<int>>::Update() {
-    Array<int> * a = this->GetArgument(0)->GetArray<int>();
-    Array<int> * b = this->GetArgument(1)->GetArray<int>();
-    Array<int> * d = this->GetArray<int>();
-
-    vector<int> cshape = Array<int>::CombineShape(a->shape, b->shape);
-    Array<int> A = a->BroadcastTo(cshape);
-    Array<int> B = b->BroadcastTo(cshape);
+    vector<int> cshape = Array<float>::CombineShape(a->shape, b->shape);
+    Array<float> A = a->BroadcastTo(cshape);
+    Array<float> B = b->BroadcastTo(cshape);
     A.AddTo(B, d);
 }
 
 template <>
-void SubOp<int>::Update() {
-    int a = this->GetArgument(0)->GetInt();
-    int b = this->GetArgument(1)->GetInt();
-    this->SetInt(a - b);
+void SubOp<Array<float>>::Update() {
+    Array<float> * a = this->GetArgument(0)->GetArray<float>();
+    Array<float> * b = this->GetArgument(1)->GetArray<float>();
+    Array<float> * d = this->GetArray<float>();
+
+    vector<int> cshape = Array<float>::CombineShape(a->shape, b->shape);
+    Array<float> A = a->BroadcastTo(cshape);
+    Array<float> B = b->BroadcastTo(cshape);
+    A.SubTo(B, d);
 }
 
 template <>
-void SubOp<float>::Update() {
-    float a = this->GetArgument(0)->GetFloat();
-    float b = this->GetArgument(1)->GetFloat();
-    this->SetFloat(a - b);
-}
+void MulOp<Array<float>>::Update() {
+    Array<float> * a = this->GetArgument(0)->GetArray<float>();
+    Array<float> * b = this->GetArgument(1)->GetArray<float>();
+    Array<float> * d = this->GetArray<float>();
 
-template <>
-void MulOp<int>::Update() {
-    int a = this->GetArgument(0)->GetInt();
-    int b = this->GetArgument(1)->GetInt();
-    this->SetInt(a + b);
-}
-
-template <>
-void MulOp<float>::Update() {
-    float a = this->GetArgument(0)->GetFloat();
-    float b = this->GetArgument(1)->GetFloat();
-    this->SetFloat(a + b);
+    vector<int> cshape = Array<float>::CombineShape(a->shape, b->shape);
+    Array<float> A = a->BroadcastTo(cshape);
+    Array<float> B = b->BroadcastTo(cshape);
+    A.MultiplyTo(B, d);
 }
