@@ -16,7 +16,7 @@ template <class T>
 T min2(T a, T b);
 
 template <class T>
-void print_vector(vector<T> vec);
+void print_vector(const vector<T> & vec);
 
 template <class T>
 void matrix_mul(const Array<T> & a, const Array<T> & b, Array<T> * d);

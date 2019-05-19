@@ -16,14 +16,14 @@ template int max2(int a, int b);
 template float max2(float a, float b);
 
 template <class T>
-void print_vector(vector<T> vec) {
+void print_vector(const vector<T> & vec) {
     for (T v: vec) {
         cout << v << ' ';
     } puts("");
 }
 
-template void print_vector(vector<int> vec);
-template void print_vector(vector<float> vec);
+template void print_vector(const vector<int> & vec);
+template void print_vector(const vector<float> & vec);
 
 template <class T>
 void matrix_mul(const Array<T> & a, const Array<T> & b, Array<T> * d) {
