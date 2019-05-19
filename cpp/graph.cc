@@ -51,14 +51,14 @@ Array<ItemType> Node::GetArray() const {
 }
 
 /*************************
- * class Operation
+ * class Operator
  */
 
-Operation::Operation() {
+Operator::Operator() {
     this->type_ = NT_OP;
 }
 
-Operation::~Operation() {
+Operator::~Operator() {
 
 }
 

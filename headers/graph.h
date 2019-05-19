@@ -36,11 +36,11 @@ public:
 	Array<ItemType> GetArray() const;
 };
 
-class Operation: public Node {
+class Operator: public Node {
 public:
 	virtual void Update() = 0;
-	Operation();
-	~Operation();
+	Operator();
+	~Operator();
 };
 
 template <class ValueType>
