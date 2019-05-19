@@ -46,7 +46,7 @@ float Node::GetFloat() const {
 }
 
 template <class ItemType>
-Array<ItemType> Node::GetArray() const {
+Array<ItemType>* Node::GetArray() const {
     return (Array<ItemType>*) this->val_;
 }
 
@@ -97,6 +97,7 @@ Placeholder<ValueType>::~Placeholder() {
 }
 
 namespace miniflow {
-    
+    template Array<int>* Node::GetArray() const;
+    template Array<float>* Node::GetArray() const;
 }
 

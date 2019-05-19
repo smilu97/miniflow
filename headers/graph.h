@@ -33,7 +33,7 @@ public:
 	int GetInt() const;
 	float GetFloat() const;
 	template <class ItemType>
-	Array<ItemType> GetArray() const;
+	Array<ItemType>* GetArray() const;
 };
 
 class Operator: public Node {
