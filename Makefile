@@ -1,7 +1,7 @@
 CC := g++
-CFLAGS := -I headers --std=c++14
+CFLAGS := -I headers --std=c++17
 MODS := graph array util
-TESTS := graph op
+TESTS := graph op broadcast
 SRCS := $(foreach mod, $(MODS), cpp/$(mod).cc)
 OBJS := $(foreach mod, $(MODS), cpp/$(mod).o)
 TEST_SRCS := $(foreach test, $(TESTS), tests/test_$(test).cc)
@@ -15,6 +15,7 @@ test: $(OBJS) $(TEST_OBJS)
 		$(CC) $(CFLAGS) $(OBJS) $$testo -o test ; \
 		./test ; \
 	done
+	make clean
 
 clean:
 	@rm $(OBJS) $(TEST_OBJS)
