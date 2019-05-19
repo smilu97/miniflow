@@ -1,7 +1,7 @@
 CC := g++
 CFLAGS := -I headers --std=c++14
 MODS := graph array util
-TESTS := graph
+TESTS := graph op
 SRCS := $(foreach mod, $(MODS), cpp/$(mod).cc)
 OBJS := $(foreach mod, $(MODS), cpp/$(mod).o)
 TEST_SRCS := $(foreach test, $(TESTS), cpp/test_$(test).cc)
@@ -11,8 +11,10 @@ TEST_OBJS := $(foreach test, $(TESTS), cpp/test_$(test).o)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 test: $(OBJS) $(TEST_OBJS)
-	$(CC) $(CFLAGS) $(OBJS) cpp/test_graph.o -o test/test_graph
-	test/test_graph
+	for testo in $(TEST_OBJS) ; do \
+		$(CC) $(CFLAGS) $(OBJS) $$testo -o test/test ; \
+		test/test ; \
+	done
 
 clean:
 	@rm $(OBJS) $(TEST_OBJS)

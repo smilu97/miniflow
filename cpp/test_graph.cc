@@ -9,5 +9,5 @@ using namespace miniflow;
 int main(int argc, char** argv)
 {
     Node node;
-    puts("Test Graph");
+    puts("Tested Graph");
 }
