@@ -47,13 +47,19 @@ namespace miniflow {
         Array<ItemType>* Clone() const;
         
         Array<ItemType> BroadcastTo(const vector<int> & shape) const;
-        static vector<int> CombineShape(const vector<int> & shape_a, const vector<int> & shape_b);
+        static vector<int> CombineShape(
+            const vector<int> & shape_a,
+            const vector<int> & shape_b
+        );
 
         static Array<ItemType>* empty(const vector<int> & shape);
         static Array<ItemType>* zeros(const vector<int> & shape);
         static Array<ItemType>* ones(const vector<int> & shape);
 
-        void MultiplyTo(const Array<ItemType> & b, Array<ItemType> * dest) const;
+        void MultiplyTo(
+            const Array<ItemType> & b,
+            Array<ItemType> * dest
+        ) const;
         void MultiplyTo(float b, Array<ItemType> * dest) const;
         void MultiplyTo(int b, Array<ItemType> * dest) const;
 

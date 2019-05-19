@@ -91,7 +91,10 @@ Array<ItemType> Array<ItemType>::BroadcastTo(const vector<int> & _shape) const {
 }
 
 template <class ItemType>
-vector<int> Array<ItemType>::CombineShape(const vector<int> & shape_a, const vector<int> & shape_b) {
+vector<int> Array<ItemType>::CombineShape(
+    const vector<int> & shape_a,
+    const vector<int> & shape_b
+) {
     if (shape_a.size() > shape_b.size()) {
         return Array<ItemType>::CombineShape(shape_b, shape_a);
     }
@@ -137,7 +140,13 @@ Array<ItemType>* Array<ItemType>::ones(const vector<int> & _shape) {
 }
 
 template <class I, typename F>
-void calc_recursive(int level, const Array<I> & a, const Array<I> & b, Array<I> * d, F op) {
+void calc_recursive(
+    int level,
+    const Array<I> & a,
+    const Array<I> & b,
+    Array<I> * d,
+    F op
+) {
     static char *ap, *bp, *dp;
     if (level == -1) {
         ap = a.data;
@@ -162,7 +171,10 @@ void calc_recursive(int level, const Array<I> & a, const Array<I> & b, Array<I> 
 }
 
 template <class ItemType>
-void Array<ItemType>::MultiplyTo(const Array<ItemType> & b, Array<ItemType> * dest) const {
+void Array<ItemType>::MultiplyTo(
+    const Array<ItemType> & b,
+    Array<ItemType> * dest
+) const {
     if (this->shape != b.shape) {
         puts("MultiplyTo(Array): shape (a, b) dismatching error");
     }
@@ -199,7 +211,10 @@ void Array<ItemType>::MultiplyTo(int b, Array<ItemType> * dest) const {
 }
 
 template <class ItemType>
-void Array<ItemType>::AddTo(const Array<ItemType> & b, Array<ItemType> * dest) const {
+void Array<ItemType>::AddTo(
+    const Array<ItemType> & b,
+    Array<ItemType> * dest
+) const {
     if (this->shape != b.shape) {
         puts("AddTo(Array): shape (a, b) dismatching error");
     }
@@ -236,7 +251,10 @@ void Array<ItemType>::AddTo(int b, Array<ItemType> * dest) const {
 }
 
 template <class ItemType>
-void Array<ItemType>::DivideTo(const Array<ItemType> & b, Array<ItemType> * dest) const {
+void Array<ItemType>::DivideTo(
+    const Array<ItemType> & b,
+    Array<ItemType> * dest
+) const {
     if (this->shape != b.shape) {
         puts("DivideTo(Array): shape (a, b) dismatching error");
     }

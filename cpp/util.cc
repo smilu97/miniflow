@@ -50,5 +50,13 @@ void matrix_mul(const Array<T> & a, const Array<T> & b, Array<T> * d) {
     }
 }
 
-template void matrix_mul(const Array<int> & a, const Array<int> & b, Array<int> * d);
-template void matrix_mul(const Array<float> & a, const Array<float> & b, Array<float> * d);
+template void matrix_mul(
+    const Array<int> & a,
+    const Array<int> & b,
+    Array<int> * d
+);
+template void matrix_mul(
+    const Array<float> & a,
+    const Array<float> & b,
+    Array<float> * d
+);
